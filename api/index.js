@@ -18,6 +18,48 @@ const users = [
   },
 ];
 
+let refreshTokens = [];
+
+app.post("/api/refresh", (req, res) => {
+  // take the refresh token from the user.
+  const refreshToken = req.body.token;
+
+  // Send error if there is no token or it is invalid.
+  if (!refreshToken) {
+    return res.status(401).json("You are not authenticated");
+  }
+  if (!refreshTokens.includes(refreshToken)) {
+    return res.status(403).json("Refersh token is invalid");
+  }
+
+  // if everything is ok, create a new access token.
+  jwt.verify(refreshToken, "refreshSecretKey", (err, user) => {
+    err && console.log(err);
+    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
+
+    refreshTokens.push(newRefreshToken);
+
+    res.status(200).json({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
+  });
+});
+
+//Generate acess token: you can see that in the access token we incorporated our userId, isAdmin and the "secretKey"
+const generateAccessToken = (user) => {
+  return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "secretKey", {
+    expiresIn: "15m",
+  });
+};
+
+const generateRefreshToken = (user) => {
+  return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "refreshSecretKey");
+};
+
 app.post("/api/login", function (req, res) {
   const { username, password } = req.body;
   const user = users.find((u) => {
@@ -25,17 +67,27 @@ app.post("/api/login", function (req, res) {
   });
 
   if (user) {
-    //Generate acess token: you can see that in the access token we incorporated our userId, isAdmin and the "secretKey"
-    const accessToken = jwt.sign(
-      { id: user.id, isAdmin: user.isAdmin },
-      "secretKey",
-      { expiresIn: "20s" }
-    );
+    //Generate access token: you can see that in the access token we incorporated our userId, isAdmin and the "secretKey"
+    // const accessToken = jwt.sign(
+    //   { id: user.id, isAdmin: user.isAdmin },
+    //   "secretKey",
+    //   { expiresIn: "15m" }
+    // );
+
+    // const refreshToken = jwt.sign(
+    //   { id: user.id, isAdmin: user.isAdmin },
+    //   "refreshSecretKey"
+    // );
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+    refreshTokens.push(refreshToken);
 
     res.json({
       username: user.username,
       isAdmin: user.isAdmin,
       accessToken,
+      refreshToken,
     });
   } else {
     res.status(400).json("Username or passwor is incorrect");
