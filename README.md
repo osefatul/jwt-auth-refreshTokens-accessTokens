@@ -1,4 +1,4 @@
-# JWT (Javascript Web TOken)
+# JWT (JSON Web Token)
 
 install npm i jsonwebtoken
 
