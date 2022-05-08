@@ -115,6 +115,12 @@ const verify = (req, res, next) => {
   }
 };
 
+app.post("/api/logout", verify, (req, res) => {
+  const refreshToken = req.body.token;
+  refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+  res.status(200).json("You logged out successfully");
+});
+
 //the request first go to the url and get the user data and then go to verify function as it can access the user data. Once verify is done it will run next() means go to next function which is the last middleware in the app.delete request.
 app.delete("/api/users/:userId", verify, (req, res) => {
   if (req.user.id === req.params.userId || req.user.isAdmin) {

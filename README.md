@@ -49,3 +49,7 @@ The above token will let users access within 20 seconds otherwise it will expire
 - Copy the refresh token and then go to api.post("api/refresh") and paste it in the body (token).
 - jwt will verify if the refresh token you coppied is same as the one it has been generated in the login request. if yes, then the array of refreshTokens will be updated with the new generated refresh token which will be with us.
 - our access token will be expired in 30 min, So how can we access to access toke? Simple, just copy the refresh token and copy it in the refresh request body as it will generate both access token and refresh token, refresh token is not expiring while the access token will get expired in 30 mins, and you can delete user with your access token.
+
+### app.logout
+
+In order to logout from the web application we need to use our refresh token in the body and access token in the header for "authorization" key with "Bearer + accessToken".
