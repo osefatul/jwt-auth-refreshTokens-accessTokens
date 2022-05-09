@@ -66,5 +66,4 @@ Once we are done with the server side we can now utilize the server side functio
 - Create RefreshToken Function which is used for sending request to refresh tokens.
 - Create another axios instance (apart from the default axios) and name it axiosJWT. This instance will only be used with delete request.
 - The axiosJWT will only be used for interceptors as "axiosJWT.interceptors.request.use" because we only check if the access token is expired for delete request, if it expired then we will call for refreshToken which is a function for a refresh request. So, whenever this instance is called with a request it will go through the interceptor.
--
-- To delete a user with delete request, we need to make sure that the access token is not expired. In order to check/change something in the meantime of calling for a request we use axiosJWT instance. and that makes sure to check expiry time before the requset is completed or executed.
+- To delete a user with delete request, we need to make sure that the access token is not expired. In order to check/change something in the meantime of calling for a request we use axiosJWT instance. and it ensures to check expiry time before the requeset is completed or executed.
