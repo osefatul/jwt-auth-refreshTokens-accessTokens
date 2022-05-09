@@ -24,8 +24,11 @@ function App() {
     }
   };
 
+  //Creating axios instance: only this instance of axios if used with any request will be executed with a pariticular functionality. in our case it is used for interceptors as the delete request will be using this instance fo axios and it will executed interceptors function for checking expirations date for
   const axiosJWT = axios.create();
 
+  // Axios interceptors are functions that Axios calls for every request. You can use interceptors to transform the request before Axios sends it, or transform the response before Axios returns the response to your code.
+  //In our case we will be using this interceptors for deleting a user. we will be changing the header and that is in the config.
   axiosJWT.interceptors.request.use(
     async (config) => {
       let currentDate = new Date();
@@ -37,6 +40,7 @@ function App() {
       return config;
     },
     (error) => {
+      //if error then cancel everything
       return Promise.reject(error);
     }
   );
@@ -73,10 +77,16 @@ function App() {
             <b>{user.username}</b>.
           </span>
           <span>Delete Users:</span>
-          <button className="deleteButton" onClick={() => handleDelete(1)}>
+          <button
+            className="deleteButton"
+            onClick={() => handleDelete(user.id)}
+          >
             Delete John
           </button>
-          <button className="deleteButton" onClick={() => handleDelete(2)}>
+          <button
+            className="deleteButton"
+            onClick={() => handleDelete(user.id)}
+          >
             Delete Jane
           </button>
           {error && (

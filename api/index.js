@@ -67,23 +67,12 @@ app.post("/api/login", function (req, res) {
   });
 
   if (user) {
-    //Generate access token: you can see that in the access token we incorporated our userId, isAdmin and the "secretKey"
-    // const accessToken = jwt.sign(
-    //   { id: user.id, isAdmin: user.isAdmin },
-    //   "secretKey",
-    //   { expiresIn: "15m" }
-    // );
-
-    // const refreshToken = jwt.sign(
-    //   { id: user.id, isAdmin: user.isAdmin },
-    //   "refreshSecretKey"
-    // );
-
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
     refreshTokens.push(refreshToken);
 
     res.json({
+      id: user.id,
       username: user.username,
       isAdmin: user.isAdmin,
       accessToken,
