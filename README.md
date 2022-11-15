@@ -1,5 +1,8 @@
 # JWT (JSON Web Token)
 
+### Intro
+The ideal practice for a fullstack developer to use JSON access token and refresh to in their web application for security, authentication and authorization reasons.
+
 ## 1. Server-Side
 
 install npm i jsonwebtoken
